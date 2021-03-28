@@ -96,6 +96,9 @@ module ActiveRecord
             elsif @raw_connection.respond_to?(:getUnderlyingConnection)
               @pooled_connection = @raw_connection
               @raw_connection = @raw_connection.underlying_connection
+            elsif @raw_connection.respond_to?(:unwrap) # TomEE returns a com.sun.proxy.$Proxy which wraps the connection
+              @pooled_connection = @raw_connection
+              @raw_connection = @raw_connection.meta_data.connection
             end
 
             config[:driver] ||= @raw_connection.meta_data.connection.java_class.name
