@@ -83,8 +83,9 @@ module ActiveRecord
           when ActiveModel::Type::Binary::Data then
             "empty_blob()"
           when Type::OracleEnhanced::Text::Data then
-            if value.to_s.length > 0
-              "to_clob('#{quote_string(value.to_s)}')"
+            str_value = value.to_s
+            if str_value.length > 0
+              str_value.chars.each_slice(4000).map { |s| "to_clob('#{quote_string(s.join)}')" }.join("||")
             else
               "empty_clob()"
             end
