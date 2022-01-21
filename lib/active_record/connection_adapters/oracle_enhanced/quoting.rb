@@ -83,7 +83,11 @@ module ActiveRecord
           when ActiveModel::Type::Binary::Data then
             "empty_blob()"
           when Type::OracleEnhanced::Text::Data then
-            "empty_clob()"
+            if value.to_s.length > 0
+              "to_clob('#{quote_string(value.to_s)}')"
+            else
+              "empty_clob()"
+            end
           when Type::OracleEnhanced::NationalCharacterText::Data then
             "empty_nclob()"
           else
