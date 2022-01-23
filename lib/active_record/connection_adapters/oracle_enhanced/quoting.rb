@@ -85,7 +85,7 @@ module ActiveRecord
           when Type::OracleEnhanced::Text::Data then
             str_value = value.to_s
             if str_value.length > 0
-              quote_string(str_value).scan(/.{0,3500}[^']/).map { |s| "to_clob('#{s}')" }.join("||")
+              quote_string(str_value).scan(/.{0,1000}[^']/).map { |s| "to_clob('#{s}')" }.join("||")
             else
               "empty_clob()"
             end
